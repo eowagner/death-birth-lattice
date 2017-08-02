@@ -1,0 +1,54 @@
+body {
+  background-color: #D0D0D0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 15px;
+}
+
+.div_side_to_side {
+	float: left;
+	margin-right: 1em;
+}
+
+.label {
+	font-weight: bold;
+}
+
+.purple_name {
+	font-weight: bold;
+	color: #800080;
+}
+
+.green_name {
+	font-weight: bold;
+	color: #008000;
+}
+
+.matrix_input {
+    width: 4em;
+}
+
+.div_centered {
+	display: flex;
+	justify-content: center;
+}
+
+table, th, td {
+    border: 0px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 3px;
+}
+
+.control_button {
+	width: 10em;
+}
+
+
+.page_center_div {
+	width: 1400px;
+	margin: 0 auto;
+}
