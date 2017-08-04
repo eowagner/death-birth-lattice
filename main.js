@@ -1,17 +1,12 @@
 const colors = ["#800080", "#008000"]; //Purple and Green -- complementary colors
 
-
-var canvas = document.getElementById("myCanvas");
-var info_canvas = document.getElementById("info_canvas");
-
+var canvas;
+var info_canvas;
 
 var game = new StrategicFormGame(stag_hunt_matrix);
 
 var net = new Lattice(game);
 net.reset(96, 96);
-
-
-draw_lattice(canvas, net);
 
 var running = true; 
 var steps_per_second = 100000;
@@ -19,10 +14,8 @@ var timing_info = convert_to_interval_aggregate(steps_per_second);
 var ms_per_draw = timing_info[0];
 var steps_per_draw = timing_info[1];
 
-
 //Javascript cannot update faster than once every 10ms
-var timerID = setInterval(one_drawing_step, ms_per_draw);
-
+var timerID;
 
 //Operates logrithically
 function time_slider_change(input) {
@@ -95,10 +88,6 @@ function radio_click() {
 }
 
 function reset_click() {
-	if (running) {
-		clearInterval(timerID);
-	}
-
 	var matrix = [ [1, 1], [1, 1] ];
 
 	matrix[0][0] = document.getElementById('t00').value;
@@ -108,6 +97,15 @@ function reset_click() {
 
 	matrix[0] = matrix[0].map(parseFloat);
 	matrix[1] = matrix[1].map(parseFloat);
+	
+	if (matrix[0].some(x => isNaN(x)) || matrix[1].some(x => isNaN(x))) {
+		alert("All entries in the game's payoff matrix must be numbers");
+		return;
+	}
+
+	if (running) {
+		clearInterval(timerID);
+	}
 
 	game.payoff_matrix = matrix;
 	net.game = game;
@@ -215,8 +213,11 @@ function one_drawing_step() {
 	draw_aggregate_info(info_canvas, net);
 }
 
-a= net.get_random_agent_prob_prop_to_payoff();
-b= net.get_random_neighbor(a);
+//Start the action
+$( document ).ready(function() {    
+    canvas = document.getElementById("myCanvas");
+	info_canvas = document.getElementById("info_canvas");
 
-console.log(a);
-console.log(b);
+	draw_lattice(canvas, net);
+	timerID = setInterval(one_drawing_step, ms_per_draw);
+});
