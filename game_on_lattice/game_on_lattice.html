@@ -61,5 +61,21 @@
 
     <tr><td><canvas id="info_canvas" width="450" height="75"></canvas></td></tr>
 
+    <!--Description-->
+    <tr><td>
+      <span class="label">Overview:</span>
+      <ul>
+        <li> Each agent is hard-wired to use a single strategy in the selected game.
+        <li> Each agent plays this game with her neighbors in the network.
+        <li> At each step of simulation...
+        <ul>
+          <li> One agent is chosen at random to die.
+          <li> The deceased agents' neighbors compete to fill this newly vacant location with a child.
+          <li> The probablility that a given neighbor wins this competition is proportional to her payoff in the selected game.
+        </ul>
+      </ul>
+
+    </td></tr>
+
   </table>
 </div>

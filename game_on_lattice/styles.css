@@ -52,3 +52,7 @@ th, td {
 	width: 1400px;
 	margin: 0 auto;
 }
+
+li {
+	margin: 5px 0;
+}

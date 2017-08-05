@@ -3,6 +3,7 @@ class DynamicLattice {
 	constructor(game) {
 		this.agents = [];
 		this.game = game;
+		this.mutation_prob = .1;
 	}
 
 	reset_null() {
@@ -181,7 +182,7 @@ class DynamicLattice {
 		});
 
 		var rand = Math.random();
-		var agg = 0
+		var agg = 0;
 
 		for (let r=0; r<payoffs.length; r++) {
 			for(let c=0; c<payoffs[0].length; c++) {
@@ -201,6 +202,11 @@ class DynamicLattice {
 		var reproducer_loc = this.get_random_neighbor_prob_prop_to_payoff(death_loc, this.game);
 
 		this.agents[death_loc[0]][death_loc[1]] = this.agents[reproducer_loc[0]][reproducer_loc[1]];
+
+		//Handle mutations
+		if (Math.random() < this.mutation_prob) {
+			this.agents[death_loc[0]][death_loc[1]] = Math.floor(Math.random() * this.game.get_num_strats());
+		}
 
 		return death_loc;
 	}
