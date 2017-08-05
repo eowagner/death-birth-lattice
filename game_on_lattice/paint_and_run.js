@@ -108,7 +108,6 @@ function reset_click() {
 	var minimum = Math.min.apply(null, flattened);
 	if (minimum < 0) {
 		matrix = matrix.map(r => r.map(x => x+(-1*minimum)));
-		console.log(matrix);
 	}
 
 	if (running) {
