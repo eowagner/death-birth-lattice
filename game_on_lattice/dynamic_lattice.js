@@ -1,13 +1,15 @@
 //agents is expected to be an n x n matrix
-function Lattice(game) {
-	this.agents = [];
-	this.game = game;
+class DynamicLattice {
+	constructor(game) {
+		this.agents = [];
+		this.game = game;
+	}
 
-	this.reset_null = function() {
+	reset_null() {
 		this.reset(this.agents.length, this.agents[0].length);
 	}
 
-	this.reset = function(rows, cols) {
+	reset(rows, cols) {
 		// this.agents = Array(rows).fill(Array(cols));
 		this.agents = new Array(rows);
 		var num_strats = this.game.get_num_strats();
@@ -20,14 +22,14 @@ function Lattice(game) {
 		}
 	}
 
-	this.get_random_agent = function() {
+	get_random_agent() {
 		var row = Math.floor(Math.random() * this.agents.length);
 		var col = Math.floor(Math.random() * this.agents[0].length);
 
 		return [row, col];
 	}
 
-	this.get_neighbors_vonNeumann = function(loc) {
+	get_neighbors_vonNeumann(loc) {
 		var nRows = this.agents.length;
 		var nCols = this.agents[0].length;
 
@@ -48,7 +50,7 @@ function Lattice(game) {
 		return neighborList;
 	}
 
-	this.get_neighbors_Moore8 = function(loc) {
+	get_neighbors_Moore8(loc) {
 		var nRows = this.agents.length;
 		var nCols = this.agents[0].length;
 
@@ -84,11 +86,11 @@ function Lattice(game) {
 		return neighborList;
 	}
 
-	this.get_neighbors = function(loc) {
+	get_neighbors(loc) {
 		return this.get_neighbors_vonNeumann(loc);
 	}
 
-	this.get_average_payoff = function(loc) {
+	get_average_payoff(loc) {
 		var neighbors = this.get_neighbors(loc);
 		var focal_strat = this.agents[loc[0]][loc[1]];
 		var agents = this.agents;
@@ -97,7 +99,7 @@ function Lattice(game) {
 			return agents[pos[0]][pos[1]];
 		});
 
-		game_temp = this.game;
+		var game_temp = this.game;
 		var payoffs_against = neighbor_strats.map( function(strat) {
 			return game_temp.get_payoff(focal_strat, strat);
 		});
@@ -109,7 +111,7 @@ function Lattice(game) {
 		return total_payoff / neighbors.length;
 	}
 
-	this.get_average_payoff_of_each_neighbor = function(loc) {
+	get_average_payoff_of_each_neighbor(loc) {
 		var neighbors = this.get_neighbors(loc);
 		var neighbors_avg_payoff = new Array(neighbors.length);
 
@@ -120,7 +122,7 @@ function Lattice(game) {
 		return neighbors_avg_payoff;
 	}
 
-	this.get_random_neighbor_prob_prop_to_payoff = function(loc) {
+	get_random_neighbor_prob_prop_to_payoff(loc) {
 		var neighbors = this.get_neighbors(loc);
 		var avg_payoff_each_neighbor = this.get_average_payoff_of_each_neighbor(loc);
 
@@ -151,7 +153,7 @@ function Lattice(game) {
 		return null;
 	}
 
-	this.get_random_neighbor = function(loc) {
+	get_random_neighbor(loc) {
 		var neighbors = this.get_neighbors(loc);
 
 		var rand = Math.floor(Math.random() * neighbors.length);
@@ -159,7 +161,7 @@ function Lattice(game) {
 		return neighbors[rand];
 	}
 
-	this.get_random_agent_prob_prop_to_payoff = function() {
+	get_random_agent_prob_prop_to_payoff() {
 		var payoffs = new Array(this.agents.length);
 
 		for (let r=0; r<payoffs.length; r++) {
@@ -194,7 +196,7 @@ function Lattice(game) {
 	}
 
 	//Returns the location at which the change occured 
-	this.step_death_birth = function() {
+	step_death_birth() {
 		var death_loc = this.get_random_agent();
 		var reproducer_loc = this.get_random_neighbor_prob_prop_to_payoff(death_loc, this.game);
 
@@ -204,7 +206,7 @@ function Lattice(game) {
 	}
 
 	//Returns the location at which the change occured
-	this.step_birth_death = function() {
+	step_birth_death() {
 		var reproducer_loc = this.get_random_agent_prob_prop_to_payoff();
 		var death_loc = this.get_random_neighbor(reproducer_loc);
 
@@ -213,7 +215,7 @@ function Lattice(game) {
 		return death_loc;
 	}
 
-	this.aggregate_frequencies = function() {
+	aggregate_frequencies() {
 		//First flatten the matrix
 		var flat = this.agents.reduce( (a, b) => {return a.concat(b);});
 
@@ -233,6 +235,32 @@ function Lattice(game) {
 	}
 
 }
+
+class StrategicFormGame {
+	constructor(payoff_matrix) {
+		this.payoff_matrix = payoff_matrix;
+	}
+
+	get_payoff(strat1, strat2) {
+		return this.payoff_matrix[strat1][strat2];
+	}
+
+	get_num_strats() {
+		return this.payoff_matrix.length; 
+	}
+}
+
+
+
+const prisoners_dilemma_matrix = [ [3, 0], [4, 1] ];
+const prisoners_dilemma_cooperation_possible_matrix = [ [5, 0], [6, 1]];
+// const prisoners_dilemma_cooperation_possible_matrix = [ [10, 0], [11, 1]];  //Appropriate numbers for Moore-8 neighborhood
+// const stag_hunt_matrix = [ [5.5, 0], [3, 3] ]; //This seemed to yield cooperation for the Moore-8 neighborhood
+const stag_hunt_matrix = [ [5, 0], [3, 3] ]; 
+const aumann_stag_hunt_matrix = [ [9,0], [8,7] ];
+const pure_coordination_matrix = [ [1,0], [0,1] ];
+const hawk_dove_matrix = [ [0, 3], [1, 2]];
+const anticoordination_matrix = [ [0, 1], [1, 0]];
 
 
 

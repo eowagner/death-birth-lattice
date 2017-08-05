@@ -4,8 +4,7 @@ var canvas;
 var info_canvas;
 
 var game = new StrategicFormGame(stag_hunt_matrix);
-
-var net = new Lattice(game);
+var net = new DynamicLattice(game);
 net.reset(96, 96);
 
 var running = true; 
@@ -97,10 +96,19 @@ function reset_click() {
 
 	matrix[0] = matrix[0].map(parseFloat);
 	matrix[1] = matrix[1].map(parseFloat);
-	
-	if (matrix[0].some(x => isNaN(x)) || matrix[1].some(x => isNaN(x))) {
+
+	var flattened = matrix.reduce( (a, b) => {return a.concat(b);});
+
+	if (flattened.some(x => isNaN(x))) {
 		alert("All entries in the game's payoff matrix must be numbers");
 		return;
+	}
+
+	// Transform the payoff matrix so that every entry is positive
+	var minimum = Math.min.apply(null, flattened);
+	if (minimum < 0) {
+		matrix = matrix.map(r => r.map(x => x+(-1*minimum)));
+		console.log(matrix);
 	}
 
 	if (running) {
