@@ -39,11 +39,12 @@
       </div><br>
     </td></tr>
 
-    
-
     <tr><td>
-
       <table>
+        <tr><td><span class="label">Mutation probability: </span></td>
+        <td><div style="text-align: right;"><span id="mut_span">0.00</span></div></td>
+        <td><input type="range" id="mutation_prob_input" min="0" max=".2" value="0" step=".01" oninput="mut_slider_change(this.value)"></td></tr>
+      
         <tr>
           <td><span class="label">Death-births per second: </span></td>
           <td><div style="width:6ch;"><span id="db_per_sec_span">100000</span></div></td>

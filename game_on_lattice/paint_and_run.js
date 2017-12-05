@@ -43,6 +43,12 @@ function agents_slider_change(input) {
 	timerID = setInterval(one_drawing_step, ms_per_draw);
 }
 
+function mut_slider_change(input) {
+	document.getElementById('mut_span').innerHTML = parseFloat(input).toFixed(2);
+
+	net.mutation_prob = input;
+}
+
 function start_pause_click() {
 	if (running) {
 		clearInterval(timerID);

@@ -6,20 +6,99 @@
 
 <html>
   <head>
-  	<script src="http://localhost:8000/jquery-3.2.1.min.js"></script>
-    <script src="http://localhost:8000/game_on_lattice/dynamic_lattice.js"></script>
-    <script src="http://localhost:8000/game_on_lattice/paint_and_run.js"></script>
+  	<script src="jquery-3.2.1.min.js"></script>
+    <script src="game_on_lattice/dynamic_lattice.js"></script>
+    <script src="game_on_lattice/paint_and_run.js"></script>
     <link rel="stylesheet" href="game_on_lattice/styles.css">
   </head>
 
 
   <body>
 
- 	<div class="page_center_div" id="meat_div"></div>
+ 	<div class="page_center_div" id="meat_div">
+    <div name="display_div" class="div_side_to_side">
+     <canvas id="myCanvas" width="768" height="768" style="border:1px solid #000000;"></canvas>
+    </div>
 
-  	<script>
-  		$( "#meat_div" ).load( "http://localhost:8000/game_on_lattice/game_on_lattice.html" );
-  	</script>
+    <div name="controls" class="div_side_to_side">
+
+      <table width="450px">
+        
+        <!--Before the addition of the bar chart this could get up to 1 pixel resolution-->
+        <tr><td><span class="label">Lattice size: </span><input type="range" id="num_agents_input" min="1" max="7" value="5" step="1" oninput="agents_slider_change(this.value)"></td></tr>
+
+        <tr><td>&nbsp;&nbsp;<span id="agents_span">96 x 96 = 9216 total agents</span><br><br></td></tr>
+
+        <tr><td><span class="label">Game:</span>
+          &nbsp;&nbsp;<table>
+            <tr>
+              <td><input type="radio" name="payoff_radio" id="rad_SH" checked="checked" onchange="radio_click()"><label for="rad_SH">Stag hunt (Generic)</label></td>
+              <td><input type="radio" name="payoff_radio" id="rad_ASH" onchange="radio_click()"><label for="rad_ASH">Aumann's Stag hunt</label></td>
+            </tr>
+            <tr>
+              <td><input type="radio" name="payoff_radio" id="rad_PD1" onchange="radio_click()"><label for="rad_PD1">Prisoner's Dilemma 1<br>&emsp;&emsp;(Payoffs that yield cooperation)</label></td>
+              <td><input type="radio" name="payoff_radio" id="rad_PD2" onchange="radio_click()"><label for="rad_PD2">Prisoner's Dilemma 2<br>&emsp;&emsp;(Payoffs that yield defection)</label></td>
+            </tr>
+            <tr>
+              <td><input type="radio" name="payoff_radio" id="rad_PC" onchange="radio_click()"><label for="rad_PC">Pure Coordination</label></td>
+              <td><input type="radio" name="payoff_radio" id="rad_AC" onchange="radio_click()"><label for="rad_AC">Anti-coordination</label></td>
+            </tr>
+          </table>
+          
+        </td></tr>
+
+        <tr><td>
+          <div class="div_centered">
+          <table>
+            <tr><td></td><td><div style="text-align:center;"><span class="purple_name">Purple</span></div></td><td><div style="text-align:center;"><span class="green_name">Green</span></div></td></tr>
+            <tr><td><span class="purple_name">Purple</span></td><td><input type="text" class="matrix_input" id="t00" value="5"></td><td><input type="text" class="matrix_input" id="t01" value="0"></td></tr>
+            <tr><td><span class="green_name">Green</span></td><td><input type="text" class="matrix_input" id="t10" value="3"></td><td><input type="text" class="matrix_input" id="t11" value="3"></td></tr>
+          </table>
+          </div><br>
+        </td></tr>
+
+        <tr><td>
+          <table>
+            <tr><td><span class="label">Mutation probability: </span></td>
+            <td><div style="text-align: right;"><span id="mut_span">0.00</span></div></td>
+            <td><input type="range" id="mutation_prob_input" min="0" max=".2" value="0" step=".01" oninput="mut_slider_change(this.value)"></td></tr>
+          
+            <tr>
+              <td><span class="label">Death-births per second: </span></td>
+              <td><div style="width:6ch;"><span id="db_per_sec_span">100000</span></div></td>
+              <td><input type="range" id="steps_per_sec_input" min="0" max="5" value="5" step="1" oninput="time_slider_change(this.value)"></td>
+            </tr>
+          </table>
+          
+        </td></tr>
+
+
+        <tr><td><div class="div_centered"><button class="control_button" id="start_pause_button" onclick="start_pause_click()">Pause</button></div></td></tr>
+
+        <tr><td><div class="div_centered"><button class="control_button" id="reset_button" onclick="reset_click()">Reset</button></div></td></tr>
+
+
+        <tr><td><canvas id="info_canvas" width="450" height="75"></canvas></td></tr>
+
+        <!--Description-->
+        <tr><td>
+          <span class="label">Overview:</span>
+          <ul>
+            <li> Each agent is hard-wired to use a single strategy in the selected game.
+            <li> Each agent plays this game with her neighbors in the network.
+            <li> At each step of simulation...
+            <ul>
+              <li> One agent is chosen at random to die.
+              <li> The deceased agents' neighbors compete to fill this newly vacant location with a child.
+              <li> The probablility that a given neighbor wins this competition is proportional to her payoff in the selected game.
+            </ul>
+          </ul>
+
+        </td></tr>
+
+      </table>
+    </div>
+  </div>
    
   </body>
 </html>

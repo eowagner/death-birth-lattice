@@ -3,7 +3,7 @@ class DynamicLattice {
 	constructor(game) {
 		this.agents = [];
 		this.game = game;
-		this.mutation_prob = .1;
+		this.mutation_prob = 0;
 	}
 
 	reset_null() {
